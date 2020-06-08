@@ -636,7 +636,10 @@ public class PlayerActivity extends AppCompatActivity
 
             @Override
             public MediaSourceFactory setDrmSessionManager(DrmSessionManager<?> drmSessionManager) {
-              this.drmSessionManager = drmSessionManager;
+              this.drmSessionManager =
+                  drmSessionManager != null
+                      ? drmSessionManager
+                      : DrmSessionManager.getDummyDrmSessionManager();
               return this;
             }
 
