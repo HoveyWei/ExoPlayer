@@ -15,6 +15,8 @@
  */
 package com.google.android.exoplayer2;
 
+import static com.google.android.exoplayer2.AudioFocusManager.PLAYER_COMMAND_PLAY_WHEN_READY;
+
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.graphics.Rect;
@@ -686,10 +688,11 @@ public class SimpleExoPlayer extends BasePlayer
       }
     }
 
-    audioFocusManager.setAudioAttributes(handleAudioFocus ? audioAttributes : null);
+    //audioFocusManager.setAudioAttributes(handleAudioFocus ? audioAttributes : null);
     boolean playWhenReady = getPlayWhenReady();
-    @AudioFocusManager.PlayerCommand
-    int playerCommand = audioFocusManager.updateAudioFocus(playWhenReady, getPlaybackState());
+    //@AudioFocusManager.PlayerCommand
+    //int playerCommand = audioFocusManager.updateAudioFocus(playWhenReady, getPlaybackState());
+    int playerCommand = PLAYER_COMMAND_PLAY_WHEN_READY;
     updatePlayWhenReady(playWhenReady, playerCommand);
   }
 
@@ -1190,8 +1193,9 @@ public class SimpleExoPlayer extends BasePlayer
     this.mediaSource = mediaSource;
     mediaSource.addEventListener(eventHandler, analyticsCollector);
     boolean playWhenReady = getPlayWhenReady();
-    @AudioFocusManager.PlayerCommand
-    int playerCommand = audioFocusManager.updateAudioFocus(playWhenReady, Player.STATE_BUFFERING);
+  // @AudioFocusManager.PlayerCommand
+   // int playerCommand = audioFocusManager.updateAudioFocus(playWhenReady, Player.STATE_BUFFERING);
+    int playerCommand = PLAYER_COMMAND_PLAY_WHEN_READY;
     updatePlayWhenReady(playWhenReady, playerCommand);
     player.prepare(mediaSource, resetPosition, resetState);
   }
@@ -1199,8 +1203,9 @@ public class SimpleExoPlayer extends BasePlayer
   @Override
   public void setPlayWhenReady(boolean playWhenReady) {
     verifyApplicationThread();
-    @AudioFocusManager.PlayerCommand
-    int playerCommand = audioFocusManager.updateAudioFocus(playWhenReady, getPlaybackState());
+   // @AudioFocusManager.PlayerCommand
+    //int playerCommand = audioFocusManager.updateAudioFocus(playWhenReady, getPlaybackState());
+    int playerCommand = PLAYER_COMMAND_PLAY_WHEN_READY;
     updatePlayWhenReady(playWhenReady, playerCommand);
   }
 
@@ -1279,7 +1284,7 @@ public class SimpleExoPlayer extends BasePlayer
   @Override
   public void stop(boolean reset) {
     verifyApplicationThread();
-    audioFocusManager.updateAudioFocus(getPlayWhenReady(), Player.STATE_IDLE);
+    //audioFocusManager.updateAudioFocus(getPlayWhenReady(), Player.STATE_IDLE);
     player.stop(reset);
     if (mediaSource != null) {
       mediaSource.removeEventListener(analyticsCollector);
@@ -1297,7 +1302,7 @@ public class SimpleExoPlayer extends BasePlayer
     audioBecomingNoisyManager.setEnabled(false);
     wakeLockManager.setStayAwake(false);
     wifiLockManager.setStayAwake(false);
-    audioFocusManager.release();
+    //audioFocusManager.release();
     player.release();
     removeSurfaceCallbacks();
     if (surface != null) {
@@ -1560,7 +1565,7 @@ public class SimpleExoPlayer extends BasePlayer
     playWhenReady = playWhenReady && playerCommand != AudioFocusManager.PLAYER_COMMAND_DO_NOT_PLAY;
     @PlaybackSuppressionReason
     int playbackSuppressionReason =
-        playWhenReady && playerCommand != AudioFocusManager.PLAYER_COMMAND_PLAY_WHEN_READY
+        playWhenReady && playerCommand != PLAYER_COMMAND_PLAY_WHEN_READY
             ? Player.PLAYBACK_SUPPRESSION_REASON_TRANSIENT_AUDIO_FOCUS_LOSS
             : Player.PLAYBACK_SUPPRESSION_REASON_NONE;
     player.setPlayWhenReady(playWhenReady, playbackSuppressionReason);

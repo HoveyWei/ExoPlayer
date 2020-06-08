@@ -15,8 +15,13 @@
  */
 package com.google.android.exoplayer2.demo;
 
+
+import android.app.admin.DeviceAdminInfo;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.media.AudioDeviceInfo;
+import android.media.AudioManager;
 import android.media.MediaDrm;
 import android.net.Uri;
 import android.os.Bundle;
@@ -382,6 +387,9 @@ public class PlayerActivity extends AppCompatActivity
               .build();
       player.addListener(new PlayerEventListener());
       player.setAudioAttributes(AudioAttributes.DEFAULT, /* handleAudioFocus= */ true);
+      AudioManager audioManager = (AudioManager)this.getSystemService(Context.AUDIO_SERVICE);
+      AudioDeviceInfo[] deviceList =   audioManager.getDevices(AudioManager.GET_DEVICES_OUTPUTS);
+
       player.setPlayWhenReady(startAutoPlay);
       player.addAnalyticsListener(new EventLogger(trackSelector));
       playerView.setPlayer(player);

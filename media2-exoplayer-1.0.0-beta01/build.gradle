@@ -1,0 +1,2 @@
+configurations.maybeCreate("default")
+artifacts.add("default", file('media2-exoplayer-1.0.0-beta01.aar'))

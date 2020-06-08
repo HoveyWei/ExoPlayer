@@ -159,7 +159,8 @@ import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
       abandonAudioFocus();
       return playWhenReady ? PLAYER_COMMAND_PLAY_WHEN_READY : PLAYER_COMMAND_DO_NOT_PLAY;
     }
-    return playWhenReady ? requestAudioFocus() : PLAYER_COMMAND_DO_NOT_PLAY;
+    //return playWhenReady ? requestAudioFocus() : PLAYER_COMMAND_DO_NOT_PLAY;
+    return playWhenReady ? PLAYER_COMMAND_PLAY_WHEN_READY : PLAYER_COMMAND_DO_NOT_PLAY;
   }
 
   /**

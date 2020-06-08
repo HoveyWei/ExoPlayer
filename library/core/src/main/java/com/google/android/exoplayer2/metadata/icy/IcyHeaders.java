@@ -207,7 +207,11 @@ public final class IcyHeaders implements Metadata.Entry {
         + "\", bitrate="
         + bitrate
         + ", metadataInterval="
-        + metadataInterval;
+        + metadataInterval
+        + ", url=\""
+        + url
+        + "\", isPublic="
+        + isPublic;
   }
 
   // Parcelable implementation.

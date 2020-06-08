@@ -16,6 +16,7 @@
 package com.google.android.exoplayer2.audio;
 
 import android.annotation.TargetApi;
+import android.media.AudioDeviceInfo;
 import androidx.annotation.Nullable;
 import com.google.android.exoplayer2.C;
 import com.google.android.exoplayer2.util.Util;
@@ -44,6 +45,7 @@ public final class AudioAttributes {
     private @C.AudioFlags int flags;
     private @C.AudioUsage int usage;
     private @C.AudioAllowedCapturePolicy int allowedCapturePolicy;
+    private AudioDeviceInfo playbackDevice;
 
     /**
      * Creates a new builder for {@link AudioAttributes}.
@@ -56,6 +58,11 @@ public final class AudioAttributes {
       flags = 0;
       usage = C.USAGE_MEDIA;
       allowedCapturePolicy = C.ALLOW_CAPTURE_BY_ALL;
+    }
+
+    public Builder setPreferredDevice(AudioDeviceInfo device){
+        this.playbackDevice = device;
+        return this;
     }
 
     /**
@@ -90,11 +97,12 @@ public final class AudioAttributes {
 
     /** Creates an {@link AudioAttributes} instance from this builder. */
     public AudioAttributes build() {
-      return new AudioAttributes(contentType, flags, usage, allowedCapturePolicy);
+      return new AudioAttributes(contentType, flags, usage, allowedCapturePolicy, playbackDevice);
     }
 
   }
 
+  public AudioDeviceInfo device;
   public final @C.AudioContentType int contentType;
   public final @C.AudioFlags int flags;
   public final @C.AudioUsage int usage;
@@ -106,11 +114,13 @@ public final class AudioAttributes {
       @C.AudioContentType int contentType,
       @C.AudioFlags int flags,
       @C.AudioUsage int usage,
-      @C.AudioAllowedCapturePolicy int allowedCapturePolicy) {
+      @C.AudioAllowedCapturePolicy int allowedCapturePolicy,
+      AudioDeviceInfo device) {
     this.contentType = contentType;
     this.flags = flags;
     this.usage = usage;
     this.allowedCapturePolicy = allowedCapturePolicy;
+    this.device = device;
   }
 
   /**
@@ -146,7 +156,8 @@ public final class AudioAttributes {
     return this.contentType == other.contentType
         && this.flags == other.flags
         && this.usage == other.usage
-        && this.allowedCapturePolicy == other.allowedCapturePolicy;
+        && this.allowedCapturePolicy == other.allowedCapturePolicy
+        && this.device == other.device;
   }
 
   @Override

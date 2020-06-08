@@ -17,6 +17,7 @@ package com.google.android.exoplayer2.audio;
 
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
+import android.media.AudioDeviceInfo;
 import android.media.AudioFormat;
 import android.media.AudioManager;
 import android.media.AudioTrack;
@@ -1378,9 +1379,13 @@ public final class DefaultAudioSink implements AudioSink {
     public AudioTrack buildAudioTrack(
         boolean tunneling, AudioAttributes audioAttributes, int audioSessionId)
         throws InitializationException {
+      android.util.Log.d(TAG, "buildAudioTrack: Enter");
       AudioTrack audioTrack;
       if (Util.SDK_INT >= 21) {
         audioTrack = createAudioTrackV21(tunneling, audioAttributes, audioSessionId);
+        if(audioAttributes.device != null && Util.SDK_INT >= 23){
+          audioTrack.setPreferredDevice(audioAttributes.device);
+        }
       } else {
         int streamType = Util.getStreamTypeForAudioUsage(audioAttributes.usage);
         if (audioSessionId == C.AUDIO_SESSION_ID_UNSET) {
@@ -1403,6 +1408,8 @@ public final class DefaultAudioSink implements AudioSink {
                   bufferSize,
                   MODE_STREAM,
                   audioSessionId);
+
+
         }
       }
 
