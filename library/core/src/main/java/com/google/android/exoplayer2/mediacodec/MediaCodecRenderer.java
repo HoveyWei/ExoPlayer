@@ -1502,7 +1502,6 @@ public abstract class MediaCodecRenderer extends BaseRenderer {
    */
   private boolean drainOutputBuffer(long positionUs, long elapsedRealtimeUs)
       throws ExoPlaybackException {
-    android.util.Log.d(TAG, "drainOutputBuffer: Enter");
     if (!hasOutputBuffer()) {
       int outputIndex;
       if (codecNeedsEosOutputExceptionWorkaround && codecReceivedEos) {

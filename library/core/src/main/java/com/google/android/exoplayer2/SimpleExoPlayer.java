@@ -15,6 +15,7 @@
  */
 package com.google.android.exoplayer2;
 
+import static com.google.android.exoplayer2.AudioFocusManager.PLAYER_COMMAND_DO_NOT_PLAY;
 import static com.google.android.exoplayer2.AudioFocusManager.PLAYER_COMMAND_PLAY_WHEN_READY;
 
 import android.annotation.TargetApi;
@@ -688,11 +689,11 @@ public class SimpleExoPlayer extends BasePlayer
       }
     }
 
-    //audioFocusManager.setAudioAttributes(handleAudioFocus ? audioAttributes : null);
+    audioFocusManager.setAudioAttributes(handleAudioFocus ? audioAttributes : null);
     boolean playWhenReady = getPlayWhenReady();
     //@AudioFocusManager.PlayerCommand
     //int playerCommand = audioFocusManager.updateAudioFocus(playWhenReady, getPlaybackState());
-    int playerCommand = PLAYER_COMMAND_PLAY_WHEN_READY;
+    int playerCommand = playWhenReady ? PLAYER_COMMAND_PLAY_WHEN_READY : PLAYER_COMMAND_DO_NOT_PLAY;
     updatePlayWhenReady(playWhenReady, playerCommand);
   }
 
@@ -1193,9 +1194,9 @@ public class SimpleExoPlayer extends BasePlayer
     this.mediaSource = mediaSource;
     mediaSource.addEventListener(eventHandler, analyticsCollector);
     boolean playWhenReady = getPlayWhenReady();
-  // @AudioFocusManager.PlayerCommand
-   // int playerCommand = audioFocusManager.updateAudioFocus(playWhenReady, Player.STATE_BUFFERING);
-    int playerCommand = PLAYER_COMMAND_PLAY_WHEN_READY;
+   //@AudioFocusManager.PlayerCommand
+   // playerCommand = audioFocusManager.updateAudioFocus(playWhenReady, Player.STATE_BUFFERING);
+   int playerCommand = playWhenReady ? PLAYER_COMMAND_PLAY_WHEN_READY : PLAYER_COMMAND_DO_NOT_PLAY;
     updatePlayWhenReady(playWhenReady, playerCommand);
     player.prepare(mediaSource, resetPosition, resetState);
   }
@@ -1204,8 +1205,8 @@ public class SimpleExoPlayer extends BasePlayer
   public void setPlayWhenReady(boolean playWhenReady) {
     verifyApplicationThread();
    // @AudioFocusManager.PlayerCommand
-    //int playerCommand = audioFocusManager.updateAudioFocus(playWhenReady, getPlaybackState());
-    int playerCommand = PLAYER_COMMAND_PLAY_WHEN_READY;
+    int playerCommand = playWhenReady ? PLAYER_COMMAND_PLAY_WHEN_READY : PLAYER_COMMAND_DO_NOT_PLAY;
+    //int playerCommand = PLAYER_COMMAND_PLAY_WHEN_READY;
     updatePlayWhenReady(playWhenReady, playerCommand);
   }
 
@@ -1284,7 +1285,7 @@ public class SimpleExoPlayer extends BasePlayer
   @Override
   public void stop(boolean reset) {
     verifyApplicationThread();
-    //audioFocusManager.updateAudioFocus(getPlayWhenReady(), Player.STATE_IDLE);
+   //audioFocusManager.updateAudioFocus(getPlayWhenReady(), Player.STATE_IDLE);
     player.stop(reset);
     if (mediaSource != null) {
       mediaSource.removeEventListener(analyticsCollector);
@@ -1562,7 +1563,7 @@ public class SimpleExoPlayer extends BasePlayer
 
   private void updatePlayWhenReady(
       boolean playWhenReady, @AudioFocusManager.PlayerCommand int playerCommand) {
-    playWhenReady = playWhenReady && playerCommand != AudioFocusManager.PLAYER_COMMAND_DO_NOT_PLAY;
+    playWhenReady = playWhenReady && playerCommand != PLAYER_COMMAND_DO_NOT_PLAY;
     @PlaybackSuppressionReason
     int playbackSuppressionReason =
         playWhenReady && playerCommand != PLAYER_COMMAND_PLAY_WHEN_READY
@@ -1816,8 +1817,8 @@ public class SimpleExoPlayer extends BasePlayer
     }
 
     @Override
-    public void executePlayerCommand(@AudioFocusManager.PlayerCommand int playerCommand) {
-      updatePlayWhenReady(getPlayWhenReady(), playerCommand);
+   public void executePlayerCommand(@AudioFocusManager.PlayerCommand int playerCommand) {
+      //updatePlayWhenReady(getPlayWhenReady(), playerCommand);
     }
 
     // AudioBecomingNoisyManager.EventListener implementation.
